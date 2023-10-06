@@ -92,10 +92,20 @@ bool LinkedList_isPosInList(LinkedList* l, Position position) {
             found.y == position.y)
             {
                 return true;
-                break;
             }
     }
     return false;
+}
+
+void LinkedList_popHead(LinkedList* l) {
+    if (l->len <= 1) {
+        LinkedList_pop(l);
+    }
+    else {
+        Node* oldHead = l->head;
+        l->head = oldHead->next;
+        free(oldHead);
+    }
 }
 
 LinkedList* LinkedList_construct() {

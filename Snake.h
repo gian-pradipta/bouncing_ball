@@ -14,6 +14,8 @@ typedef struct{
     int lwrbY;
     LinkedList* bodyparts;
     char direction;
+    Position foodPosition;
+    int score ;
 } Snake;
 
 Snake* Snake_construct(int upperBoundY, int lowerBoundY,int upperBoundX,int lowerBoundX);
@@ -27,6 +29,6 @@ Position Snake_provideFood(Snake* s);
 bool Snake_eat (Snake* s);
 bool Snake_initialStage(Snake* s);
 bool Snake_hitWall (Snake* s); 
-
+bool Snake_hitItself(Snake* s) ;
 
 #endif

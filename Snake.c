@@ -20,14 +20,15 @@ Snake* Snake_construct(int upperBoundY, int lowerBoundY,int upperBoundX,int lowe
     srand(time(NULL));
 
     Snake* s = (Snake*) malloc(sizeof(Snake));
+    Position pos = {-1,-1};
+    s->score = 0;
     s->bodyparts = LinkedList_construct();
     s->lwrbX = lowerBoundX;
     s->lwrbY = lowerBoundY;
     s->uprbX = upperBoundX;
     s->uprbY = upperBoundY;
     s->direction = 'd';
-    s->foodPosition.x = -1; s->foodPosition.y = -1;
-    s->score = 0;
+    s->foodPosition = pos;
     return s;
 }
 
@@ -119,6 +120,8 @@ bool Snake_eat (Snake* s) {
         ) 
     {
         LinkedList_appendHead(s->bodyparts, s->foodPosition);
+        
+        s->score++;
         return true;
     }
     return false;
@@ -134,6 +137,21 @@ bool Snake_hitWall (Snake* s) {
 
     return result;
 }
-void Snake_hitItself() {
 
+
+
+bool Snake_hitItself(Snake* s) {
+    Position headPosition = s->bodyparts->head->data;
+    LinkedList* l = s->bodyparts;
+    Position found ;
+    for (int i = 1;i < l->len; i++ ) {
+        found = LinkedList_get(l, i);
+        if (found.x == headPosition.x &&
+            found.y == headPosition.y)
+            {
+                return true;
+            }
+    }
+    
+    return false;
 }

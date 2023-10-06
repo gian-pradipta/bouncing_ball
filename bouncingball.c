@@ -158,9 +158,9 @@ Graphic* Graphic_construct(int rows, int columns) {
     Graphic *graphic = (Graphic *) malloc(sizeof(Graphic));
     graphic->rows = rows;
     graphic->columns = columns;
-    graphic->pixels = (int**)malloc(rows * sizeof(int*));
+    graphic->pixels = (int**)malloc (rows * sizeof(int*) +30);
     for (int i = 0; i < rows; ++i) {
-        graphic->pixels[i] = (int*)malloc(columns * sizeof(int));
+        graphic->pixels[i] = (int*)malloc(columns * sizeof(int) + 10);
     }
     for (int i = 0; i < rows; i++) 
     {
@@ -189,6 +189,9 @@ int main () {
     Graphic* g = Graphic_construct(20, 100);
     // Graphic_renderShape(g, pos, 3);
     Snake* s = Snake_construct(20, 0, 100, 0);
+    printf("%d",s->score);
+    printf("h");
+    
     LinkedList* ll = Snake_getBody(s);
     
     size_t frameDelay = 75000;
@@ -205,9 +208,9 @@ int main () {
         Graphic_putPixel(g, foodPosition.y, foodPosition.x);
         Graphic_renderShape(g, ll);
         oldTail =  Snake_move(s);
-        if (Snake_hitWall(s)) {
+        if (Snake_hitWall(s) || Snake_hitItself(s)) {
             system("cls");
-            printf("You Lose\n");
+            printf("Game Over\nYour Score is %d", s->score);
             break;
         }
         if (s->direction == 'w' || s->direction == 's') {

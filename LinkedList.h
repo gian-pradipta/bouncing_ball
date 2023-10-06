@@ -29,5 +29,6 @@ Position LinkedList_get(LinkedList*, int);
 LinkedList* LinkedList_construct();
 int LinkedList_destruct(LinkedList*);
 bool LinkedList_isPosInList(LinkedList* l, Position position);
+void LinkedList_popHead(LinkedList*);
 
 #endif
