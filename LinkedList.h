@@ -2,7 +2,7 @@
 #define LINKEDLIST_H
 
 #include <stdio.h>
-
+#include <stdbool.h>
 
 typedef struct position {
     int y;
@@ -28,5 +28,6 @@ int LinkedList_pop(LinkedList*);
 Position LinkedList_get(LinkedList*, int);
 LinkedList* LinkedList_construct();
 int LinkedList_destruct(LinkedList*);
+bool LinkedList_isPosInList(LinkedList* l, Position position);
 
 #endif

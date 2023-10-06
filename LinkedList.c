@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "bouncingball.h"
 #include "LinkedList.h"
+#include <stdbool.h>
 
 int LinkedList_append(LinkedList* ll, Position pos) {
     Node* newNode = (Node*) malloc(sizeof(Node));
@@ -83,7 +83,20 @@ Position LinkedList_get(LinkedList* ll, int index) {
     return pos;
 }
 
-
+bool LinkedList_isPosInList(LinkedList* l, Position position) {
+    Node *helper = l->head;
+    Position found ;
+    for (int i = 0;i < l->len; i++ ) {
+        found = LinkedList_get(l, i);
+        if (found.x == position.x &&
+            found.y == position.y)
+            {
+                return true;
+                break;
+            }
+    }
+    return false;
+}
 
 LinkedList* LinkedList_construct() {
     LinkedList* ll = (LinkedList*) malloc(sizeof(LinkedList)) ;

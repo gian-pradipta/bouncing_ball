@@ -3,7 +3,6 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <conio.h>
-#include "LinkedList.c"
 #include "bouncingball.h"
 #include "Snake.h"
 #include <unistd.h>
@@ -137,11 +136,15 @@ void Graphic_refresh(Graphic *graphic) {
     {
         for (int j = 0 ; j < columns ; j++) {
             graphic->pixels[i][j] = ' ';
+            if (i == 0 || j == 0) {
+                graphic->pixels[i][j] = '*';
+            }
+            
         }
     }
 }
 void Graphic_renderShape(Graphic* g, LinkedList* ll) {
-    Graphic_refresh(g);
+    // Graphic_refresh(g);
     for (int i = 0; i < ll->len; i++) {
         Position pos;
         pos = LinkedList_get(ll, i);
@@ -163,11 +166,19 @@ Graphic* Graphic_construct(int rows, int columns) {
     {
         for (int j = 0 ; j < columns ; j++) {
             graphic->pixels[i][j] = ' ';
+            if (i == 0 || j == 0) {
+                graphic->pixels[i][j] = '*';
+            }
+            if (i == rows-1 || j == columns - 1) {
+                graphic->pixels[i][j] = '*';
+            }
         }
     }
     return graphic; 
 }
- 
+
+
+
 void Graphic_startScreen () {
     printf("WELCOME TO BOUNCING BALL \n");
     printf("Press Any Key to Start \n");
@@ -177,34 +188,35 @@ void Graphic_startScreen () {
 int main () {
     Graphic* g = Graphic_construct(20, 100);
     // Graphic_renderShape(g, pos, 3);
-    Snake* s = Snake_construct(20, 0, 10, 0);
+    Snake* s = Snake_construct(20, 0, 100, 0);
     LinkedList* ll = Snake_getBody(s);
     
-
-
+    size_t frameDelay = 75000;
+    Position oldTail = {2, 2};
+    Position foodPosition;
     while (1) {
+        if (Snake_initialStage(s)) {
+            foodPosition = Snake_provideFood(s);
+        }
+        if (Snake_eat(s)) {
+            foodPosition = Snake_provideFood(s);
+        }
+        Graphic_deletePixel(g, oldTail.y, oldTail.x);
+        Graphic_putPixel(g, foodPosition.y, foodPosition.x);
         Graphic_renderShape(g, ll);
-        Snake_move(s);
-        usleep(50000);
+        oldTail =  Snake_move(s);
+        if (Snake_hitWall(s)) {
+            system("cls");
+            printf("You Lose\n");
+            break;
+        }
+        if (s->direction == 'w' || s->direction == 's') {
+            frameDelay = 130000;
+        }
+        usleep(frameDelay);
         system("cls");
     }
     Graphic_destruct(g);
+    Snake_destruct(s);
 
-    // Graphic_bouncingMove(g);
-    // LinkedList* ll = LinkedList_construct();
-    // printf("a\n");
-    // Position pos;
-    // for (int i =0; i < 12; i++) {
-    //     pos.x = 0;
-    //     pos.y = i;
-    //     LinkedList_append(ll, pos);
-    // }
-    // for (int i = 0; i < ll->len; i++) {
-    //     pos = LinkedList_get(ll, i);
-    //     printf("%d %d ", pos.y, pos.x);
-    // }
-    // printf("did\n");
-    // LinkedList_destruct(ll);
-    // printf("b\n");
-    // Graphic_destruct(g);
 }
