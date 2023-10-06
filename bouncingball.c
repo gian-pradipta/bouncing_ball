@@ -2,13 +2,11 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdbool.h>
-
-typedef struct graphic {
-    int rows;
-    int columns;
-    int** pixels;
-
-} Graphic ;
+#include <conio.h>
+#include "LinkedList.c"
+#include "bouncingball.h"
+#include "Snake.h"
+#include <unistd.h>
 
 
 void Graphic_putPixel(Graphic* this,int y,int x) {
@@ -41,7 +39,7 @@ void Graphic_deletePixel(Graphic* this,int y,int x) {
     if (x < 0){
         x = 0;
     }
-    this->pixels[y][x] = '*';
+    this->pixels[y][x] = ' ';
 }
 
 void Graphic_movePixel(Graphic* this,int formerY, int formerX, int futureY, int futureX) {
@@ -132,6 +130,27 @@ void Graphic_destruct (Graphic* this) {
     free(this);
 }
 
+void Graphic_refresh(Graphic *graphic) {
+    int rows = graphic->rows;
+    int columns = graphic->columns;
+    for (int i = 0; i < rows; i++) 
+    {
+        for (int j = 0 ; j < columns ; j++) {
+            graphic->pixels[i][j] = ' ';
+        }
+    }
+}
+void Graphic_renderShape(Graphic* g, LinkedList* ll) {
+    Graphic_refresh(g);
+    for (int i = 0; i < ll->len; i++) {
+        Position pos;
+        pos = LinkedList_get(ll, i);
+        Graphic_putPixel(g, pos.y, pos.x);
+    }
+    Graphic_renderGraphic(g);
+} 
+
+
 Graphic* Graphic_construct(int rows, int columns) {
     Graphic *graphic = (Graphic *) malloc(sizeof(Graphic));
     graphic->rows = rows;
@@ -143,15 +162,49 @@ Graphic* Graphic_construct(int rows, int columns) {
     for (int i = 0; i < rows; i++) 
     {
         for (int j = 0 ; j < columns ; j++) {
-            graphic->pixels[i][j] = '*';
+            graphic->pixels[i][j] = ' ';
         }
     }
     return graphic; 
 }
  
+void Graphic_startScreen () {
+    printf("WELCOME TO BOUNCING BALL \n");
+    printf("Press Any Key to Start \n");
+    char c = _getch();
+}
 
 int main () {
     Graphic* g = Graphic_construct(20, 100);
-    Graphic_bouncingMove(g);
+    // Graphic_renderShape(g, pos, 3);
+    Snake* s = Snake_construct(20, 0, 10, 0);
+    LinkedList* ll = Snake_getBody(s);
+    
+
+
+    while (1) {
+        Graphic_renderShape(g, ll);
+        Snake_move(s);
+        usleep(50000);
+        system("cls");
+    }
     Graphic_destruct(g);
+
+    // Graphic_bouncingMove(g);
+    // LinkedList* ll = LinkedList_construct();
+    // printf("a\n");
+    // Position pos;
+    // for (int i =0; i < 12; i++) {
+    //     pos.x = 0;
+    //     pos.y = i;
+    //     LinkedList_append(ll, pos);
+    // }
+    // for (int i = 0; i < ll->len; i++) {
+    //     pos = LinkedList_get(ll, i);
+    //     printf("%d %d ", pos.y, pos.x);
+    // }
+    // printf("did\n");
+    // LinkedList_destruct(ll);
+    // printf("b\n");
+    // Graphic_destruct(g);
 }
