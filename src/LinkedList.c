@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "LinkedList.h"
+#include "../include/LinkedList.h"
 #include <stdbool.h>
 
 int LinkedList_append(LinkedList* ll, Position pos) {

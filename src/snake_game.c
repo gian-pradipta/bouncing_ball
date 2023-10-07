@@ -1,5 +1,5 @@
-#include "graphic.h"
-#include "snake.h"
+#include "../include/graphic.h"
+#include "../include/snake.h"
 #include <conio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -60,6 +60,29 @@ void SnakeGame_startScreen(){
     printf("Press Any Key to Start \n");
     _getch();
 }
+
+
+
+void SnakeGame_readScores(SnakeGame* sg) {
+    FILE* file;
+    char c;
+    const char* filepath = "score/score.txt";
+    file = fopen(filepath, "r");
+    if (file == NULL) {
+        printf("No score!");
+        exit(EXIT_FAILURE);
+    }
+    while ((c = fgetc(file)) != EOF){
+        printf("%c", c);
+    }
+    
+    fclose(file);
+}
+
+void SnakeGame_writeHighScore() {
+
+}
+
 bool SnakeGame_eat (SnakeGame* sg) {
     Snake* s = sg->s;
 

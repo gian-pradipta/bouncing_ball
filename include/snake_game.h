@@ -25,6 +25,7 @@ void SnakeGame_gameStart(SnakeGame* sg);
 void SnakeGame_putFood(SnakeGame* sg);
 void SnakeGame_isLost(SnakeGame* sg);
 void SnakeGame_setStartingFood(SnakeGame* sg);
+void SnakeGame_readScores(SnakeGame* sg);
 
 
 #endif

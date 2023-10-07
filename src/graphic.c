@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <conio.h>
-#include "graphic.h"
+#include "../include/graphic.h"
 #include <unistd.h>
 
 

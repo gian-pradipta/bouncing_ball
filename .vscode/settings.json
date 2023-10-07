@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "graphic.h": "c",
+        "snake.h": "c",
+        "linkedlist.h": "c"
+    }
+}

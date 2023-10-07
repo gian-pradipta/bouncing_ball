@@ -1,4 +1,4 @@
-#include "LinkedList.h"
+#include "../include/LinkedList.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <conio.h>
