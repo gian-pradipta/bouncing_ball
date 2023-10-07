@@ -1,6 +1,7 @@
 #include "../include/LinkedList.h"
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <conio.h>
 #include <time.h>
 
@@ -33,6 +34,14 @@ void Snake_destruct (Snake* s) {
 
 void Snake_changeDirection (Snake* s, char newDirection) {
     char oldDirection = s->direction;
+    if (!(newDirection == 'w' ||
+        newDirection == 'a' ||
+        newDirection == 'd' ||
+        newDirection == 's')) 
+    {
+        printf("%c",newDirection);
+        return;
+    }
     bool invalidChange = false;
     invalidChange = invalidChange || (oldDirection == 'w' && newDirection == 's');
     invalidChange = invalidChange || (oldDirection == 's' && newDirection == 'w');
