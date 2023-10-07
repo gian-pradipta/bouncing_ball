@@ -1,13 +1,11 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-#include <stdio.h>
+#include <stdlib.h>
+#include "Position.h"
 #include <stdbool.h>
 
-typedef struct position {
-    int y;
-    int x;
-} Position;
+typedef struct position Position;
 
 typedef struct Node{
     Position data;
@@ -21,14 +19,14 @@ typedef struct linkedList{
 } LinkedList; 
 
 
+LinkedList* LinkedList_construct();
 int LinkedList_append(LinkedList*, Position);
 int LinkedList_appendXY(LinkedList*, int, int);
 int LinkedList_appendHead(LinkedList*, Position);
 int LinkedList_pop(LinkedList*);
 Position LinkedList_get(LinkedList*, int);
-LinkedList* LinkedList_construct();
-int LinkedList_destruct(LinkedList*);
 bool LinkedList_isPosInList(LinkedList* l, Position position);
 void LinkedList_popHead(LinkedList*);
+int LinkedList_destruct(LinkedList*);
 
 #endif

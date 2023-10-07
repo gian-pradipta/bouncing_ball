@@ -2,33 +2,27 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <conio.h>
-#include "bouncingball.h"
 #include <time.h>
 
-typedef struct{
+typedef struct snake{
     int uprbX;
     int uprbY;
     int lwrbX;
     int lwrbY;
     LinkedList* bodyparts;
     char direction;
-    Position foodPosition;
-    int score ;
 } Snake;
 
 Snake* Snake_construct(int upperBoundY, int lowerBoundY,int upperBoundX,int lowerBoundX) {
     srand(time(NULL));
 
     Snake* s = (Snake*) malloc(sizeof(Snake));
-    Position pos = {-1,-1};
-    s->score = 0;
     s->bodyparts = LinkedList_construct();
     s->lwrbX = lowerBoundX;
     s->lwrbY = lowerBoundY;
     s->uprbX = upperBoundX;
     s->uprbY = upperBoundY;
     s->direction = 'd';
-    s->foodPosition = pos;
     return s;
 }
 
@@ -37,24 +31,19 @@ void Snake_destruct (Snake* s) {
     free(s);
 }
 
-void Snake_changeDirection (Snake* s, char userInput) {
+void Snake_changeDirection (Snake* s, char newDirection) {
     char oldDirection = s->direction;
     bool invalidChange = false;
-    invalidChange = invalidChange || (oldDirection == 'w' && userInput == 's');
-    invalidChange = invalidChange || (oldDirection == 's' && userInput == 'w');
-    invalidChange = invalidChange || (oldDirection == 'a' && userInput == 'd');
-    invalidChange = invalidChange || (oldDirection == 'd' && userInput == 'a');
+    invalidChange = invalidChange || (oldDirection == 'w' && newDirection == 's');
+    invalidChange = invalidChange || (oldDirection == 's' && newDirection == 'w');
+    invalidChange = invalidChange || (oldDirection == 'a' && newDirection == 'd');
+    invalidChange = invalidChange || (oldDirection == 'd' && newDirection == 'a');
 
     if (invalidChange) return ;
-    s->direction = userInput;
+    s->direction = newDirection;
 
 }
 
-char Snake_getUserInputIfAny(Snake* s) {
-    if (_kbhit()) {return _getch();}
-
-    return s->direction;
-}
 
 Position Snake_getNextHeadPosition(Snake* s, Position *pos) {
     if (s->direction == 'w') {
@@ -73,16 +62,30 @@ Position Snake_getNextHeadPosition(Snake* s, Position *pos) {
     
 }
 
-Position Snake_move (Snake* s) {
+void Snake_moveHeadNodeBefore(Snake* s) {
+    Position oldPos;
+    oldPos = s->bodyparts->head->data;
+    if (s->direction == 'w') {
+        s->bodyparts->head->data = s->bodyparts->head->next->data;
+        s->bodyparts->head->data.y++;
+    }
+    if (s->direction == 's') {
+        s->bodyparts->head->data = s->bodyparts->head->next->data;
+        s->bodyparts->head->data.y++;
+    }
+}
+
+void Snake_move (Snake* s) {
     LinkedList* body = s->bodyparts;
     Position oldHeadPosition = s->bodyparts->head->data;
-    Position formerTail = body->tail->data;
     LinkedList_pop(body);
     Snake_getNextHeadPosition(s, &oldHeadPosition);
     LinkedList_appendHead(body, oldHeadPosition);
-    char userInput = Snake_getUserInputIfAny(s);
-    Snake_changeDirection(s, userInput);
-    return formerTail;
+}
+
+void Snake_turn(Snake* s, char newDirection) {
+    Snake_changeDirection(s, newDirection);
+    Snake_move(s);
 }
 
 LinkedList* Snake_getBody(Snake* s) {
@@ -91,67 +94,6 @@ LinkedList* Snake_getBody(Snake* s) {
     return s->bodyparts;
 }
 
-Position Snake_provideFood(Snake* s) {
-    Position foodPos;
-    while (1) {
-        int randomX = rand()%(s->uprbX) + s->lwrbX+1;
-        int randomY = rand()%(s->uprbY) + s->lwrbY+1;
-        foodPos.x = randomX;
-        foodPos.y = randomY;
-        if (!LinkedList_isPosInList(s->bodyparts, foodPos)) {
-            break;
-        }
-    }
-    s->foodPosition = foodPos;
-    return foodPos;
-
-}
-
-
-bool Snake_initialStage(Snake* s) {
-    if (s->foodPosition.x == -1) {
-        return true;
-    }
-    return false;
-}
-bool Snake_eat (Snake* s) {
-    if (s->bodyparts->head->data.y == s->foodPosition.y &&
-        s->bodyparts->head->data.x == s->foodPosition.x
-        ) 
-    {
-        LinkedList_appendHead(s->bodyparts, s->foodPosition);
-        
-        s->score++;
-        return true;
-    }
-    return false;
-}
-bool Snake_hitWall (Snake* s) {
-    bool result = false ;
-    int x = s->bodyparts->head->data.x;
-    int y = s->bodyparts->head->data.y;
-    result = result || (x == s->lwrbX+1);
-    result = result || (x == s->uprbX-1);
-    result = result || (y == s->lwrbY+1);
-    result = result || (y == s->uprbY-1);
-
-    return result;
-}
 
 
 
-bool Snake_hitItself(Snake* s) {
-    Position headPosition = s->bodyparts->head->data;
-    LinkedList* l = s->bodyparts;
-    Position found ;
-    for (int i = 1;i < l->len; i++ ) {
-        found = LinkedList_get(l, i);
-        if (found.x == headPosition.x &&
-            found.y == headPosition.y)
-            {
-                return true;
-            }
-    }
-    
-    return false;
-}
