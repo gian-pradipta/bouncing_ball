@@ -11,6 +11,6 @@ int main ()
 
     SnakeGame_destruct(sg);
 
-    SnakeGame_readScores(sg);
+    // SnakeGame_readScores(sg);
     return 0;   
 }

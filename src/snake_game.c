@@ -172,13 +172,18 @@ void SnakeGame_gameStart(SnakeGame* sg) {
         printf("Total Score: %d\n", sg->score);
         Snake_changeDirection(s, userInput);
         Snake_move(s);
-        if (sg->s->direction == 'w' || 'a') frameDelay = 190000; else frameDelay = 75000;
+        if (sg->s->direction == 'w' || sg->s->direction == 's') frameDelay = 150000; else frameDelay = 75000;
         usleep(frameDelay);
         if (SnakeGame_isLost(sg)) {
             break;
         }
-        system("cls");
+        printf("\033[21A");
     }
+    printf("\033[12A");
+    printf("\033[20C");
+    printf("Game Over!\n");
+    printf("\033[12B");
+    printf("\033[20D");
 
 
 }
