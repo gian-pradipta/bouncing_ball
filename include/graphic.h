@@ -17,6 +17,10 @@ void Graphic_deletePixel(Graphic*,int,int);
 void Graphic_movePixel(Graphic* ,int, int, int, int);
 void Graphic_refresh(Graphic *graphic);
 void Graphic_putShape(Graphic*, LinkedList*);
+
+/*
+* rendering pixel map into the screen 
+*/
 void Graphic_renderGraphic (Graphic* this);
 
 

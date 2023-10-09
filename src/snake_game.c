@@ -179,11 +179,32 @@ void SnakeGame_gameStart(SnakeGame* sg) {
         }
         printf("\033[21A");
     }
-    printf("\033[12A");
-    printf("\033[20C");
+
     printf("Game Over!\n");
     printf("\033[12B");
     printf("\033[20D");
+}
 
+void SnakeGame_gameStartNoAnsii(SnakeGame* sg) {
+        Snake* s = sg->s;
+    SnakeGame_initializeSnake(sg);
+    size_t frameDelay = 75000;
+    SnakeGame_setStartingFood(sg);
+    while (1) {
+        Graphic_refresh(sg->g);
+        SnakeGame_putFood(sg);
+        char userInput = SnakeGame_getUserInputIfAny(sg);
+        SnakeGame_renderSnake(sg);
+        printf("Total Score: %d\n", sg->score);
+        Snake_changeDirection(s, userInput);
+        Snake_move(s);
+        if (sg->s->direction == 'w' || sg->s->direction == 's') frameDelay = 150000; else frameDelay = 75000;
+        usleep(frameDelay);
+        if (SnakeGame_isLost(sg)) {
+            break;
+        }
+        system("cls");
+    }
 
+    printf("Game Over!\n");
 }
